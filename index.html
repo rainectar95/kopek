@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Kopek</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#141414">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="img/icon-192.png">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+
+
+        </div>
+        <div class="header-top" id="main-header">
+            <div class="date-wrapper">
+                <div id="header-week-day" class="date-week-day">---</div>
+                <div class="date-block">
+                    <div class="date-display" id="header-date">-- ---</div>
+                    <button id="reset-date-btn" class="hidden" onclick="ui.resetDateFilter()">
+                        <span class="material-symbols-rounded">close</span>
+                    </button>
+                </div>
+            </div>
+            <div class="total-block">
+                <div id="header-stat" class="short-statistic">
+                    <span class="material-symbols-rounded small" id="stat-icon">expand_circle_up</span>
+                    <span id="stat-text">0 ₽ чем вчера</span>
+                </div>
+                <div class="total-display" id="header-total">0 ₽</div>
+            </div>
+        </div>
+
+
+        <div id="calendar-wrapper" class="calendar-wrapper">
+            <div id="calendar-strip" class="calendar-strip"></div>
+            <input type="date" id="system-date-input" style="display:none">
+        </div>
+
+        <div id="settings-wrapper" class="settings-wrapper">
+            <div class="settings-panel">
+                <div class="color-picker">
+                    <div class="color-dot active" style="background: var(--col-yellow);"
+                        onclick="app.setAccent('var(--col-yellow)', this)">
+                    </div>
+                    <div class="color-dot" style="background: var(--col-sun);"
+                        onclick="app.setAccent('var(--col-sun)', this)">
+                    </div>
+                    <div class="color-dot" style="background: var(--col-chrome);"
+                        onclick="app.setAccent('var(--col-chrome)', this)">
+                    </div>
+                    <div class="color-dot" style="background: var(--col-blue);"
+                        onclick="app.setAccent('var(--col-blue)', this)">
+                    </div>
+                    <div class="color-dot" style="background: var(--col-purple);"
+                        onclick="app.setAccent('var(--col-purple)', this)">
+                    </div>
+                    <div class="color-dot" style="background: var(--col-lime);"
+                        onclick="app.setAccent('var(--col-lime)', this)">
+                    </div>
+                </div>
+                <div style="flex: 1; min-width: 20px;"></div>
+
+                <div class="theme-toggle" onclick="app.toggleTheme()">
+                    <span class="material-symbols-rounded" id="theme-icon">dark_mode</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="content-sheet">
+
+        <div id="view-home">
+            <div class="filters-row">
+                <button class="filter-today pill active" onclick="ui.setTodayFilter('all')">Все</button>
+                <button class="filter-today pill" onclick="ui.setTodayFilter('tips')">Чаевые</button>
+            </div>
+            <ul class="list" id="today-list"></ul>
+        </div>
+
+        <div id="view-history" class="hidden">
+            <div class="filters-row">
+                <button class="tool-btn filled" onclick="ui.togglePeriodModal(true)">
+                    <span class="material-symbols-rounded">filter_alt</span>
+                </button>
+
+                <button id="history-reset-btn" class="tool-btn ghost hidden" onclick="ui.resetDateFilter()">
+                    <span class="material-symbols-rounded">close</span>
+                </button>
+                <div id="history-chips" class="history-chips-scroll"></div>
+            </div>
+
+            <ul class="list" id="history-list"></ul>
+        </div>
+        <div class="popover-backdrop hidden" id="period-popover-backdrop" onclick="ui.togglePeriodModal(false)"></div>
+        <div class="period-popover hidden" id="period-popover">
+
+            <div class="popover-item" onclick="ui.setHistoryFilter('week')">
+                <span>Неделя</span>
+            </div>
+            <div class="popover-item" onclick="ui.setHistoryFilter('month')">
+                <span>Месяц</span>
+            </div>
+            <div class="popover-item" onclick="ui.setHistoryFilter('month-prev')">
+                <span id="prev-month-btn-text">Прошлый месяц</span>
+            </div>
+        </div>
+        </div>
+
+        <div id="view-settings" class="hidden">
+
+            <div class="filters-row">
+                <button class="filter-service pill active" onclick="ui.setServiceFilter('all')">Все</button>
+                <button class="filter-service pill" onclick="ui.setServiceFilter('Мужская')">Мужская</button>
+                <button class="filter-service pill" onclick="ui.setServiceFilter('Женская')">Женская</button>
+                <button class="filter-service pill" onclick="ui.setServiceFilter('Детская')">Детская</button>
+            </div>
+            <ul class="list" id="services-list"></ul>
+        </div>
+    </main>
+
+    <nav>
+        <button id="nav-home" class="active" onclick="ui.switchTab('home')">
+            <span class="material-symbols-rounded">home</span>
+            <span>Сегодня</span>
+        </button>
+        <button id="nav-history" onclick="ui.switchTab('history')">
+            <span class="material-symbols-rounded">history</span>
+            <span>История</span>
+        </button>
+        <button id="nav-settings" onclick="ui.switchTab('settings')">
+            <span class="material-symbols-rounded">content_cut</span>
+            <span>Услуги</span>
+        </button>
+    </nav>
+
+    <button class="fab" id="main-fab" onclick="app.handleFabClick()">
+        <span class="material-symbols-rounded" id="fab-icon">draw</span>
+        <span class="fab-text" id="fab-text">Добавить запись</span>
+    </button>
+
+    <div class="modal" id="add-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Новая стрижка</h2>
+                <button class="close-modal-btn" onclick="ui.toggleModal(false)">
+                    <span class="material-symbols-rounded">close</span>
+                </button>
+            </div>
+            <input type="text" class="input-dark" id="client-name" placeholder="Клиент">
+            <div class="row-inputs">
+                <input type="number" id="final-price" class="input-dark" placeholder="Цена" style="flex:1">
+                <input type="number" id="tip-amount" class="input-dark" placeholder="Чаевые" style="flex:1">
+            </div>
+            <div class="category-row">
+                <div class="cat-pill active" onclick="ui.selectCategory(this, 'Мужская')">
+                    <span class="material-symbols-rounded">face</span> Мужская
+                </div>
+                <div class="cat-pill" onclick="ui.selectCategory(this, 'Женская')">
+                    <span class="material-symbols-rounded">face_3</span> Женская
+                </div>
+                <div class="cat-pill" onclick="ui.selectCategory(this, 'Детская')">
+                    <span class="material-symbols-rounded">child_hat</span> Детская
+                </div>
+            </div>
+            <select id="service-select" class="input-dark" onchange="app.onServiceSelect()"></select>
+            <div class="modal-actions">
+                <button class="btn-create" id="modal-save-btn" onclick="app.saveRecord()">Создать</button>
+                <button class="btn-delete hidden" id="modal-delete-btn" onclick="app.deleteCurrentRecord()">Удалить
+                    запись</button>
+                <button class="btn-cancel-ghost" id="modal-cancel-btn" onclick="ui.toggleModal(false)">Отменить</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="calendar-modal">
+        <div class="modal-content calendar-modal-content">
+            <div class="calendar-full-header">
+                <div class="calendar-current-month" id="cal-month">Январь</div>
+                <div class="calendar-current-month" id="cal-year">2026</div>
+            </div>
+
+            <div class="weekdays-grid">
+                <div>Пн</div>
+                <div>Вт</div>
+                <div>Ср</div>
+                <div>Чт</div>
+                <div>Пт</div>
+                <div>Сб</div>
+                <div>Вс</div>
+            </div>
+
+            <div class="calendar-scroll-container" id="calendar-scroll-container">
+                <div id="calendar-content">
+                </div>
+            </div>
+
+            <div class="calendar-modal-actions">
+                <button id="calendar-apply-btn" class="btn-primary-green" onclick="ui.applyCalendarDate()">
+                    Выбрать дату
+                </button>
+
+                <button class="btn-cancel-dark" id="calendar-cancel-btn" onclick="app.handleCalendarCancel()">
+                    Отменить
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="service-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="service-modal-title">Новая услуга</h2>
+                <button class="close-modal-btn" onclick="ui.toggleServiceModal(false)">
+                    <span class="material-symbols-rounded">close</span>
+                </button>
+            </div>
+            <input type="text" class="input-dark" id="new-service-name" placeholder="Название услуги">
+            <div class="category-row">
+                <div class="cat-pill active" onclick="ui.selectSettingsCategory(this, 'Мужская')">
+                    <span class="material-symbols-rounded">face</span> Мужская
+
+                </div>
+                <div class="cat-pill" onclick="ui.selectSettingsCategory(this, 'Женская')">
+                    <span class="material-symbols-rounded">face_3</span> Женская
+                </div>
+                <div class="cat-pill" onclick="ui.selectSettingsCategory(this, 'Детская')">
+                    <span class="material-symbols-rounded">child_hat</span> Детская
+                </div>
+            </div>
+            <input type="number" class="input-dark" id="new-service-price" placeholder="Цена">
+            <div class="modal-actions">
+                <button class="btn-create" id="service-save-btn" onclick="app.saveService()">Создать</button>
+                <button class="btn-delete hidden" id="service-delete-btn" onclick="app.deleteCurrentService()">Удалить
+                    услугу</button>
+                <button class="btn-cancel-ghost" id="service-cancel-btn"
+                    onclick="ui.toggleServiceModal(false)">Отменить</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="confirmation-modal">
+        <div class="modal-content confirmation-content">
+            <img class="illustation" src="/img/trash.svg">
+            <div class="confirm-message-block">
+                <h3 id="confirm-title" class="confirm-title">Удалить запись?</h3>
+                <p id="confirm-text" class="confirm-text">Это действие нельзя будет отменить.</p>
+            </div>
+            <div class="modal-actions confirmation-actions">
+                <button class="btn-delete-active" id="confirm-proceed-btn">Удалить</button>
+                <button class="btn-cancel-ghost" onclick="ui.closeConfirmModal()">Отменить</button>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="script.js"></script>
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('Service Worker registered!', reg))
+                .catch(err => console.log('Service Worker failed:', err));
+        });
+    }
+</script>
+</body>
+
+</html>
