@@ -62,25 +62,31 @@
         <div id="settings-wrapper" class="settings-wrapper">
             <div class="settings-panel">
                 <div class="color-picker">
-                    <div class="color-dot active" style="background: var(--col-yellow);"
-                        onclick="app.setAccent('var(--col-yellow)', this)">
+                    <div class="color-dot" data-color="yellow" style="background: var(--col-yellow);"
+                        onclick="app.setAccent('yellow', this)">
                     </div>
-                    <div class="color-dot" style="background: var(--col-sun);"
-                        onclick="app.setAccent('var(--col-sun)', this)">
+
+                    <div class="color-dot" data-color="sun" style="background: var(--col-sun);"
+                        onclick="app.setAccent('sun', this)">
                     </div>
-                    <div class="color-dot" style="background: var(--col-chrome);"
-                        onclick="app.setAccent('var(--col-chrome)', this)">
+
+                    <div class="color-dot" data-color="chrome" style="background: var(--col-chrome);"
+                        onclick="app.setAccent('chrome', this)">
                     </div>
-                    <div class="color-dot" style="background: var(--col-blue);"
-                        onclick="app.setAccent('var(--col-blue)', this)">
+
+                    <div class="color-dot" data-color="blue" style="background: var(--col-blue);"
+                        onclick="app.setAccent('blue', this)">
                     </div>
-                    <div class="color-dot" style="background: var(--col-purple);"
-                        onclick="app.setAccent('var(--col-purple)', this)">
+
+                    <div class="color-dot" data-color="purple" style="background: var(--col-purple);"
+                        onclick="app.setAccent('purple', this)">
                     </div>
-                    <div class="color-dot" style="background: var(--col-lime);"
-                        onclick="app.setAccent('var(--col-lime)', this)">
+
+                    <div class="color-dot" data-color="lime" style="background: var(--col-lime);"
+                        onclick="app.setAccent('lime', this)">
                     </div>
                 </div>
+
                 <div style="flex: 1; min-width: 20px;"></div>
 
                 <div class="theme-toggle" onclick="app.toggleTheme()">
@@ -274,15 +280,15 @@
         </div>
     </div>
     <script type="module" src="script.js"></script>
-<script>
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('sw.js')
-                .then(reg => console.log('Service Worker registered!', reg))
-                .catch(err => console.log('Service Worker failed:', err));
-        });
-    }
-</script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('Service Worker registered!', reg))
+                    .catch(err => console.log('Service Worker failed:', err));
+            });
+        }
+    </script>
 </body>
 
 </html>

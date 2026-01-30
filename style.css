@@ -1,4 +1,3 @@
-/* --- CORE --- */
 
 :root {
     /* OTHER */
@@ -12,68 +11,95 @@
     --f-nav: 0.875rem;
     --f-hero: 1.25rem;
 
-    /* ACCENT COLOR */
-    --col-yellow: hsl(56, 80%, 65%);
-    --col-blue: hsl(201, 80%, 65%);
-    --col-purple: hsl(279, 80%, 65%);
-    --col-chrome: hsl(0, 0%, 69%);
-    --col-sun: hsl(33, 80%, 65%);
-    --col-lime: hsl(95, 50%, 60%);
+    /* 1. БАЗА ЦВЕТОВ (HUE, SATURATION) */
+    --hs-yellow: 56, 80%;
+    --hs-sun: 33, 80%;
+    --hs-chrome: 0, 0%;
+    --hs-blue: 201, 40%;
+    --hs-purple: 279, 65%;
+    --hs-lime: 95, 50%;
 
-    /* BACKGROUND */
-    --bg-app: #141414;
-    --bg-sheet: #202020;
+    /* 2. ЦВЕТА ДЛЯ ВЫБОРА (КРУЖОЧКИ) */
+    --col-yellow: hsl(var(--hs-yellow), 20%);
+    --col-sun: hsl(var(--hs-sun), 25%);
+    --col-chrome: hsl(var(--hs-chrome), 69%);
+    --col-blue: hsl(var(--hs-blue), 45%);
+    --col-purple: hsl(var(--hs-purple), 30%);
+    --col-lime: hsl(var(--hs-lime), 20%);
+
+    --theme-hs: var(--hs-yellow);
+
+    /* --- MONET BACKGROUNDS (Тонированные темные фоны) --- */
+    --bg-app: hsl(var(--theme-hs), 4%);
+    --bg-sheet: hsl(var(--theme-hs), 10%);
     --bg-modal: var(--bg-sheet);
     --backface-modal: #00000080;
-    --bg-input: #05040430;
+    --bg-input: hsl(var(--theme-hs), 15%);
     --bg-input-fill: var(--bg-chip-active);
-    --bg-chip: #ffffff10;
-    --bg-chip-active: #fffFFF40;
-    --bg-card: #ffffff08;
-    --bg-range: var(--col-lime);
+    --bg-chip: hsl(var(--theme-hs), 20%);
+    --bg-chip-active: hsl(var(--theme-hs), 35%);
+    --bg-card: hsl(var(--theme-hs), 13%);
+    --border: hsl(var(--theme-hs), 15%);
+    --outline: hsla(var(--theme-hs), 18%);
 
-    --primary-old: #303030;
-    --border: #ffffff20;
-    --outline: #ffffff10;
-    --bg-white: white;
+    /* --- DYNAMIC ACCENTS (Динамические акценты) --- */
+    --primary: hsl(var(--theme-hs), 60%);
+    --bg-range: hsla(var(--theme-hs), 65%, 0.3);
 
-    /* BASE */
+    --text-light: white;
+    --text-dark: black;
+
+    /* BASE COLORS */
     --danger: rgb(250, 108, 108);
-    --primary: rgb(207, 198, 70);
     --grow: rgb(112, 233, 112);
     --drop: rgb(238, 89, 89);
 
     /* TEXT */
-    --text-main: #ffffff;
-    --text-secondary: rgba(255, 255, 255, 0.6);
-    --text-muted: rgba(255, 255, 255, 0.3);
-    --text-static: var(--bg-app);
+    --text-main: hsl(var(--theme-hs), 90%);
+    --text-secondary: hsla(var(--theme-hs), 90%, 0.6);
+    --text-muted: hsla(var(--theme-hs), 80%, 0.4);
+    --text-static: var(--text-dark);
+
     color-scheme: dark;
 }
 
 body.light-theme {
     /* ACCENT COLOR */
-    --col-yellow: hsl(56, 72%, 66%);
+    /* --col-yellow: hsl(56, 72%, 66%);
     --col-blue: hsl(201, 97%, 77%);
     --col-purple: hsl(256, 90%, 88%);
     --col-chrome: hsl(0, 0%, 82%);
     --col-sun: hsl(19, 91%, 70%);
-    --col-lime: hsl(95, 55%, 72%);
+    --col-lime: hsl(95, 55%, 72%); */
 
-    /* BACKGROUND */
-    --bg-app: #e7e7e7;
-    --bg-sheet: #f3f3f3;
+    /* 1. БАЗА ЦВЕТОВ (HUE, SATURATION) - Настраиваем под светлый фон */
+    /* Увеличиваем насыщенность, чтобы на белом было сочно */
+
+
+    --bg-app: hsl(var(--theme-hs), 98%);
+    
+    /* Карточки/Листы - чисто белые или чуть тонированные */
+
+
+    /* Поля ввода - легкий серый тинт */
+    --bg-app: hsl(var(--theme-hs), 85%);
+    --bg-sheet: hsl(var(--theme-hs), 98%);
     --bg-modal: var(--bg-sheet);
-    --backface-modal: #00000060;
-    --bg-input: #05040410;
-    --bg-input-fill: #ffffff30;
-    --bg-chip: #00000008;
-    --bg-chip-active: #00000020;
-    --bg-card: #00000008;
-    --primary: #ececec;
-    --border: #00000015;
-    --outline: #00000009;
-    --bg-white: white;
+    --backface-modal: #00000080;
+    --bg-input: hsl(var(--theme-hs), 90%);
+    --bg-input-fill: hsl(var(--theme-hs), 100%);
+    --bg-chip: hsla(var(--theme-hs), 20%, 0.1);
+    --bg-chip-active: hsla(var(--theme-hs), 20%, 0.3);
+    --bg-card: hsla(var(--theme-hs), 5%, 0.05);
+    --border: hsla(var(--theme-hs), 5%, 0.05);
+    --outline: hsla(var(--theme-hs), 1%, 0.05);
+
+    /* Акцентный цвет (кнопки) */
+    /* В светлой теме цвет должен быть темнее (L=50-60%), чтобы текст на нем читался */
+    --primary: hsl(var(--theme-hs), 50%);
+    
+    /* Календарь */
+    --bg-range: hsla(var(--theme-hs), 60%, 0.2);
 
     /* BASE */
     --danger: rgb(216, 57, 57);
@@ -81,11 +107,41 @@ body.light-theme {
     --grow: rgb(37, 167, 37);
     --drop: rgb(224, 32, 32);
 
+
+    /* TEXT - Инвертируем для светлого фона */
+    --text-main: hsl(var(--theme-hs), 15%);       /* Почти черный */
+    --text-secondary: hsla(var(--theme-hs), 10%, 40%); /* Серый */
+    --text-muted: hsla(var(--theme-hs), 0%, 0.3);
+    
+    --text-static: var(--text-dark);
+    --text-light: white;
+    --text-dark: black;
+
+    /* 1. БАЗА ЦВЕТОВ (HUE, SATURATION) */
+    --hs-yellow: 56, 100%;
+    --hs-sun: 33, 97%;      /* ИСПРАВЛЕНО: Было 201 (синий) */
+    --hs-chrome: 0, 0%;
+    --hs-blue: 201, 60%;    /* Чуть ярче для света */
+    --hs-purple: 256, 90%;
+    --hs-lime: 95, 55%;
+
+    /* 2. ЦВЕТА ДЛЯ КРУЖОЧКОВ */
+    --col-yellow: hsl(var(--hs-yellow), 50%); /* Делаем кружочки темнее, чтобы их было видно на белом */
+    --col-sun: hsl(var(--hs-sun), 50%);
+    --col-chrome: hsl(var(--hs-chrome), 82%);
+    --col-blue: hsl(var(--hs-blue), 60%);
+    --col-purple: hsl(var(--hs-purple), 70%);
+    --col-lime: hsl(var(--hs-lime), 50%);
+
+
+
+    --primary: hsl(var(--theme-hs), 60%);
+    --bg-range: hsla(var(--theme-hs), 65%, 0.3);
+
+
     /* TEXT */
-    --text-main: #000000;
-    --text-secondary: rgba(0, 0, 0, 0.6);
-    --text-muted: rgba(0, 0, 0, 0.3);
-    --text-static: #000;
+
+
     color-scheme: light;
 }
 
@@ -121,7 +177,7 @@ h2 {
 /* --- LAYOUT & VIEWS --- */
 
 header {
-    padding: 1rem 1rem 0 1rem;
+    padding: 2rem 1rem 0 1rem;
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
@@ -313,7 +369,7 @@ nav button.active {
 
 nav button.active .material-symbols-rounded {
     background: var(--primary);
-    color: var(--text-static);
+    color: var(--text-dark);
 }
 
 
@@ -389,7 +445,7 @@ nav button.active .material-symbols-rounded {
 .btn-create {
     width: 100%;
     background: var(--primary);
-    color: var(--text-static);
+    color: var(--text-dark);
     padding: 1rem;
     border: none;
     border-radius: 50rem;
@@ -421,7 +477,7 @@ nav button.active .material-symbols-rounded {
 
 .btn-delete-active {
     width: 100%;
-    color: var(--bg-app);
+    color: var(--text-static);
     background-color: var(--danger);
     padding: 1rem;
     border: none;
@@ -494,7 +550,7 @@ input::-webkit-inner-spin-button {
 
 .input-dark {
     width: 100%;
-    background: var(--bg-chip);
+    background: var(--bg-input);
     border: 1px solid transparent;
     text-align: center;
     color: white;
@@ -504,6 +560,10 @@ input::-webkit-inner-spin-button {
     font-size: var(--f-body);
     margin-bottom: 1rem;
     outline: 1px solid var(--border);
+}
+
+.input-dark::placeholder {
+    color: var(--bg-chip-active);
 }
 
 .input-dark:focus {
@@ -606,7 +666,7 @@ body.light-theme .input-dark:focus {
     width: 3rem;
     height: 3rem;
     background: var(--bg-chip);
-    background-color: var(--bg-white);
+    background-color: var(--text-light);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -791,7 +851,7 @@ body.light-theme .input-dark:focus {
     background-color: transparent;
     border-radius: 16px;
     padding: 8px;
-    background-color: var(--primary-old);
+    background-color: var(--bg-chip);
     outline: 0px solid transparent;
     transform-origin: top left;
     opacity: 0;
@@ -865,7 +925,7 @@ body.light-theme .period-popover {
     display: flex;
     margin-bottom: 1rem;
     padding: 0.5rem;
-    background-color: var(--bg-chip);
+    background-color: var(--bg-input);
     border-radius: 50rem;
     outline: 1px solid var(--border);
 }
@@ -887,7 +947,7 @@ body.light-theme .period-popover {
 }
 
 .cat-pill.active {
-    background: var(--bg-chip-active);
+    background: var(--bg-input-fill);
     color: var(--text-main);
     border-color: transparent;
 }
@@ -1000,8 +1060,8 @@ body.light-theme .period-popover {
     justify-content: space-between;
     align-items: flex-end;
     padding-top: 1.5rem;
-    font-size: var(--f-body);
-    font-weight: 500;
+    font-size: var(--f-subtitle);
+    font-weight: 400;
 }
 
 .group-header .date-label {
@@ -1040,8 +1100,7 @@ body.light-theme .period-popover {
     display: flex;
     align-items: center;
     gap: 1rem;
-    padding: 1rem;
-    margin-bottom: 0;
+    margin-bottom: 1rem;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
@@ -1057,14 +1116,14 @@ body.light-theme .period-popover {
     height: 32px;
     border-radius: 50%;
     cursor: pointer;
-    border: 2px solid transparent;
+    outline: 2px solid transparent;
+    outline-offset: -2px;
     transition: transform 0.2s, border-color 0.2s;
     flex-shrink: 0;
 }
 
 .color-dot.active {
-    border-color: var(--text-main);
-    transform: scale(1.15);
+    outline-color: var(--text-main);
 }
 
 .theme-toggle {
@@ -1097,13 +1156,13 @@ body.light-theme .period-popover {
 .calendar-wrapper.visible {
     max-height: 100px;
     opacity: 1;
-    margin-bottom: 10px;
+    margin-bottom: 1rem;
 }
 
 .calendar-strip {
     display: flex;
-    gap: 8px;
-    padding-bottom: 10px;
+    gap: 0.5rem;
+    /* padding-bottom: 10px; */
     width: 100%;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
@@ -1120,7 +1179,7 @@ body.light-theme .period-popover {
     align-items: center;
     justify-content: center;
     flex: 0 0 calc(100% / 7 - 8px);
-    min-width: 50px;
+    min-width: 3rem;
     padding-block: 0.5rem;
     border-radius: 1rem;
     color: var(--text-secondary);
@@ -1128,19 +1187,21 @@ body.light-theme .period-popover {
     user-select: none;
 }
 
-.day-item.selected {
+.day-item.selected,
+.day-item.week-day.selected {
     background-color: var(--bg-chip-active);
     color: var(--text-main);
 }
 
 .day-item .week-day {
-    font-size: 11px;
+    font-size: var(--f-nav);
     margin-bottom: 4px;
+    color: var(--text-muted);
 }
 
 .day-item .day-num {
-    font-size: 20px;
-    font-weight: 600;
+    font-size: var(--f-hero);
+    font-weight: 400;
 }
 
 
@@ -1246,14 +1307,14 @@ body.light-theme .period-popover {
     border-radius: 50%;
     border-radius: 50% !important;
     background-color: var(--primary);
-    color: var(--text-static) !important;
+    color: var(--text-dark) !important;
     box-shadow: none !important;
     z-index: 3;
 }
 
 .cal-day.range-start {
     background-color: var(--primary);
-    color: var(--text-static) !important;
+    color: var(--text-dark) !important;
     border-radius: 50% 0 0 50%;
     box-shadow: 27px 0 0 var(--primary);
     z-index: 2;
@@ -1261,7 +1322,7 @@ body.light-theme .period-popover {
 
 .cal-day.range-end {
     background-color: var(--primary);
-    color: var(--text-static) !important;
+    color: var(--text-dark) !important;
     border-radius: 0 50% 50% 0;
     box-shadow: -27px 0 0 var(--primary);
     z-index: 2;
@@ -1280,7 +1341,7 @@ body.light-theme .period-popover {
 
 .cal-day.in-range.is-visual-start {
     background-color: var(--primary);
-    color: var(--text-static);
+    color: var(--text-dark);
     border-radius: 50% 0 0 50%;
     box-shadow:
         0px 0 0 var(--primary),
@@ -1299,7 +1360,7 @@ body.light-theme .period-popover {
 
 .cal-day.in-range {
     background-color: var(--primary);
-    color: var(--text-static) !important;
+    color: var(--text-dark) !important;
     border-radius: 0;
     width: 100%;
     box-shadow: -22px 0 0 var(--primary), 22px 0 0 var(--primary);
@@ -1459,6 +1520,15 @@ body.light-theme .btn-cancel-dark {
     }
 }
 
+.group-header .cat-label {
+    font-size: var(--f-body);
+    color: var(--text-main);
+}
+
+.group-header .cat-count {
+    color: var(--text-muted);
+    font-size: var(--f-body);
+}
 
 /* --- POTENTIALLY UNUSED OR OBSOLETE STYLES --- */
 /* These styles were identified during refactoring and might be unused. */
@@ -1483,15 +1553,7 @@ body.light-theme .btn-cancel-dark {
     transition: 0.5s ease-in-out;
 }
 
-.group-header .cat-label {
-    font-size: var(--f-subtitle);
-    color: var(--text-main);
-}
 
-.group-header .cat-count {
-    color: var(--text-muted);
-    font-size: var(--f-subtitle);
-}
 
 
 @keyframes popIn {

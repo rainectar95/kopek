@@ -23,34 +23,66 @@ export const app = {
     isCalendarLoading: false,
     searchQuery: '',
 
-toggleTheme: () => {
-        // 1. Просто переключаем класс (CSS сделает остальное)
+    // Словарь цветов (Monet HSL)
+    themeColors: {
+        yellow: '56, 50%',
+        blue:   '201, 50%',
+        purple: '279, 50%',
+        chrome: '0, 0%',
+        sun:    '33, 50%',
+        lime:   '105, 50%'
+    },
+
+    toggleTheme: () => {
+        // 1. Переключаем класс
         document.body.classList.toggle('light-theme');
         
-        // 2. Проверяем, включился ли он
+        // 2. Проверяем состояние
         const isLight = document.body.classList.contains('light-theme');
         
-        // 3. Сохраняем выбор пользователя
+        // 3. Сохраняем
         localStorage.setItem('theme', isLight ? 'light' : 'dark');
         
-        // 4. Меняем иконку кнопки (если нужно)
+        // 4. Меняем иконку
         const icon = document.getElementById('theme-icon');
         if (icon) {
-            // Если светлая - показываем луну (чтобы переключить на темную)
-            // Если темная - показываем солнце
             icon.innerText = isLight ? 'dark_mode' : 'light_mode';
         }
         
-        // 5. (Опционально) Красим "шапку" браузера в мобилках
+        // 5. Меняем цвет шторки браузера
+        // Примечание: тут можно доработать, чтобы брался цвет темы, но пока оставим серый/черный
         document.querySelector('meta[name="theme-color"]')
             .setAttribute('content', isLight ? '#f2f2f7' : '#141414');
     },
 
-    setAccent: (colorVar, el) => {
-        document.body.style.setProperty('--primary', colorVar);
-        document.querySelectorAll('.color-dot').forEach(dot => dot.classList.remove('active'));
-        if (el) el.classList.add('active');
-        localStorage.setItem('accentColor', colorVar);
+    // Основная функция смены цвета (Monet)
+    setThemeColor: (colorName) => {
+        const hsValue = app.themeColors[colorName];
+        if (!hsValue) return;
+
+        // 1. Устанавливаем HSL переменную темы
+        document.documentElement.style.setProperty('--theme-hs', hsValue);
+        
+        // 2. Сохраняем выбор
+        localStorage.setItem('themeColorName', colorName);
+
+        // 3. Обновляем активный класс на кружочках
+        document.querySelectorAll('.color-dot').forEach(dot => {
+            // Проверяем dataset.color, если он есть, иначе пытаемся угадать
+            if (dot.dataset.color === colorName) {
+                dot.classList.add('active');
+            } else {
+                dot.classList.remove('active');
+            }
+        });
+    },
+
+    // Эта функция для вызова из HTML (onclick="app.setAccent(...)")
+    // Мы перенаправляем её на новую логику
+    setAccent: (colorName, el) => {
+        // Если вдруг передали 'var(--...)', обрезаем или игнорируем, 
+        // но лучше в HTML передавать просто 'yellow', 'blue' и т.д.
+        app.setThemeColor(colorName);
     },
 
     handleCalendarCancel: () => {
@@ -59,22 +91,20 @@ toggleTheme: () => {
     },
 
     init: () => {
+        // 1. Восстановление Темы (Dark/Light)
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'light') {
             document.body.classList.add('light-theme');
             const icon = document.getElementById('theme-icon');
-            if (icon) icon.innerText = 'light_mode';
+            if (icon) icon.innerText = 'dark_mode'; // Для светлой темы иконка "Луна"
         }
-        const savedColor = localStorage.getItem('accentColor');
-        if (savedColor) {
-            document.body.style.setProperty('--primary', savedColor);
-            setTimeout(() => {
-                document.querySelectorAll('.color-dot').forEach(d => {
-                    if (d.getAttribute('style').includes(savedColor)) d.classList.add('active');
-                    else d.classList.remove('active');
-                });
-            }, 50);
-        }
+
+        // 2. Восстановление Цвета (Monet)
+        // Берем сохраненное имя или дефолт 'yellow'
+        const savedColor = localStorage.getItem('themeColorName') || 'yellow';
+        app.setThemeColor(savedColor);
+
+        // 3. Инициализация услуг (если пусто)
         if (storage.getServices().length === 0) {
             storage.saveServices([
                 { id: 1, name: 'Модельная стрижка', price: 1500, category: 'Мужская' },
@@ -84,18 +114,25 @@ toggleTheme: () => {
                 { id: 7, name: 'Детская стрижка', price: 1000, category: 'Детская' }
             ]);
         }
-        document.getElementById('system-date-input').addEventListener('change', (e) => {
-            if (e.target.value) {
-                app.historyMode = 'date';
-                app.selectedDate = new Date(e.target.value);
-                ui.setHistoryFilter('date');
-            }
-        });
+
+        // 4. Слушатели событий
+        const dateInput = document.getElementById('system-date-input');
+        if (dateInput) {
+            dateInput.addEventListener('change', (e) => {
+                if (e.target.value) {
+                    app.historyMode = 'date';
+                    app.selectedDate = new Date(e.target.value);
+                    ui.setHistoryFilter('date');
+                }
+            });
+        }
+
         const confirmBtn = document.getElementById('confirm-proceed-btn');
         if (confirmBtn) confirmBtn.addEventListener('click', () => {
             if (app.pendingDeleteAction) { app.pendingDeleteAction(); app.pendingDeleteAction = null; }
             ui.closeConfirmModal();
         });
+
         window.onclick = (event) => {
             if (event.target.id === 'add-modal') ui.toggleModal(false);
             if (event.target.id === 'service-modal') ui.toggleServiceModal(false);
@@ -103,6 +140,7 @@ toggleTheme: () => {
             if (event.target.id === 'confirmation-modal') ui.closeConfirmModal();
         };
 
+        // Текст "Предыдущий месяц" в кнопке
         const prevMonthDate = new Date();
         prevMonthDate.setMonth(prevMonthDate.getMonth() - 1);
         const monthName = prevMonthDate.toLocaleString('ru-RU', { month: 'long' });
@@ -110,10 +148,7 @@ toggleTheme: () => {
         const prevMonthBtn = document.getElementById('prev-month-btn-text');
         if (prevMonthBtn) prevMonthBtn.innerText = capitalizedMonth;
 
-        const isLight = document.body.classList.contains('light-theme');
-        const icon = document.getElementById('theme-icon');
-        if (icon) icon.innerText = isLight ? 'dark_mode' : 'light_mode';
-
+        // Запуск UI
         ui.initScrollHandler();
         ui.updateHeader();
         ui.renderToday();
@@ -232,7 +267,7 @@ toggleTheme: () => {
             records: storage.getRecords(),
             settings: {
                 theme: localStorage.getItem('theme'),
-                accent: localStorage.getItem('accentColor')
+                accent: localStorage.getItem('themeColorName') // Сохраняем имя цвета
             },
             version: '1.0'
         };
@@ -258,7 +293,7 @@ toggleTheme: () => {
                     if(data.records) storage.saveRecords(data.records);
                     if(data.settings) {
                         localStorage.setItem('theme', data.settings.theme);
-                        if(data.settings.accent) localStorage.setItem('accentColor', data.settings.accent);
+                        if(data.settings.accent) localStorage.setItem('themeColorName', data.settings.accent);
                     }
                     alert('Данные восстановлены! Обновите страницу.');
                     location.reload();
@@ -274,5 +309,5 @@ toggleTheme: () => {
     handleSearch: (query) => {
         app.searchQuery = query.toLowerCase();
         ui.renderHistory();
-    },
+    }
 };
