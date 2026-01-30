@@ -1,7 +1,6 @@
-/* --- VARIABLES --- */
+/* --- CORE --- */
+
 :root {
-
-
     /* OTHER */
     --nav-height: 90px;
 
@@ -20,8 +19,6 @@
     --col-chrome: hsl(0, 0%, 69%);
     --col-sun: hsl(33, 80%, 65%);
     --col-lime: hsl(95, 50%, 60%);
-    /* --col-pink: hsl(0, 97%, 75%); */
-
 
     /* BACKGROUND */
     --bg-app: #141414;
@@ -33,11 +30,12 @@
     --bg-chip: #ffffff10;
     --bg-chip-active: #fffFFF40;
     --bg-card: #ffffff08;
-    --bg-range: #303030;
+    --bg-range: var(--col-lime);
+
+    --primary-old: #303030;
     --border: #ffffff20;
     --outline: #ffffff10;
     --bg-white: white;
-
 
     /* BASE */
     --danger: rgb(250, 108, 108);
@@ -50,18 +48,16 @@
     --text-secondary: rgba(255, 255, 255, 0.6);
     --text-muted: rgba(255, 255, 255, 0.3);
     --text-static: var(--bg-app);
+    color-scheme: dark;
 }
 
-/* --- СВЕТЛАЯ ТЕМА --- */
 body.light-theme {
-
     /* ACCENT COLOR */
     --col-yellow: hsl(56, 72%, 66%);
     --col-blue: hsl(201, 97%, 77%);
     --col-purple: hsl(256, 90%, 88%);
     --col-chrome: hsl(0, 0%, 82%);
     --col-sun: hsl(19, 91%, 70%);
-    /* --col-pink: hsl(0, 97%, 75%); */
     --col-lime: hsl(95, 55%, 72%);
 
     /* BACKGROUND */
@@ -74,28 +70,23 @@ body.light-theme {
     --bg-chip: #00000008;
     --bg-chip-active: #00000020;
     --bg-card: #00000008;
-    --bg-range: #ececec;
+    --primary: #ececec;
     --border: #00000015;
     --outline: #00000009;
     --bg-white: white;
-
-
 
     /* BASE */
     --danger: rgb(216, 57, 57);
     --primary: rgb(207, 198, 70);
     --grow: rgb(37, 167, 37);
     --drop: rgb(224, 32, 32);
+
     /* TEXT */
     --text-main: #000000;
     --text-secondary: rgba(0, 0, 0, 0.6);
     --text-muted: rgba(0, 0, 0, 0.3);
     --text-static: #000;
-
-}
-
-.material-symbols-rounded {
-    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    color-scheme: light;
 }
 
 * {
@@ -115,33 +106,84 @@ body {
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    transition: all 0.3s ease;
 }
 
 h2 {
     font-weight: normal;
 }
 
-/* --- HEADER --- */
+.material-symbols-rounded {
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+
+/* --- LAYOUT & VIEWS --- */
+
 header {
-    padding: 20px 20px 0 20px;
-    background: var(--bg-app);
+    padding: 1rem 1rem 0 1rem;
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
-    transition: all 0.3s ease;
 }
 
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
 }
+
+.content-sheet {
+    background: var(--bg-sheet);
+    clip-path: inset(0 0 round 1rem 1rem 0 0);
+    flex-grow: 1;
+    padding: 0 0 100px 0;
+    overflow-y: auto;
+    transition: 0.3s ease;
+}
+
+.content-sheet::-webkit-scrollbar {
+    display: none;
+    overflow: hidden;
+}
+
+#view-home,
+#view-history,
+#view-settings {
+    background-color: var(--bg-sheet);
+    transition: 0.3s ease;
+}
+
+nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: var(--nav-height);
+    background: var(--bg-sheet);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    z-index: 40;
+    color: var(--text-secondary);
+    padding-bottom: env(safe-area-inset-bottom);
+    box-shadow: 1px 1px 1px 1px rgba(255, 255, 255, 0);
+    transition:
+        transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+        background-color 0.3s ease;
+    transform: translateY(0);
+}
+
+
+/* --- HEADER --- */
 
 .header-top {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    margin-bottom: 20px;
+    margin-bottom: 2rem;
 }
 
 .date-wrapper {
@@ -162,6 +204,13 @@ input::-webkit-inner-spin-button {
     font-weight: 400;
 }
 
+.date-display {
+    font-size: var(--f-header);
+    font-weight: 400;
+    letter-spacing: -0.5px;
+    line-height: 1;
+}
+
 .total-block {
     display: flex;
     flex-direction: column;
@@ -169,7 +218,13 @@ input::-webkit-inner-spin-button {
     gap: 4px;
 }
 
-
+.total-display {
+    font-size: var(--f-header);
+    font-weight: 400;
+    text-align: right;
+    letter-spacing: -0.5px;
+    line-height: 1;
+}
 
 .short-statistic {
     display: flex;
@@ -183,167 +238,136 @@ input::-webkit-inner-spin-button {
     font-size: var(--f-nav);
 }
 
-/* Цвета для статистики */
-.stat-up {
-    color: var(--grow) !important;
-}
-
-.stat-down {
-    color: var(--drop) !important;
-}
-
-.date-display {
-    font-size: var(--f-header);
-    font-weight: 400;
-    letter-spacing: -0.5px;
-    line-height: 1;
-}
-
-.small {
-    font-size: var(--f-nav);
-}
-
-.total-display {
-    font-size: var(--f-header);
-    font-weight: 400;
-    text-align: right;
-    letter-spacing: -0.5px;
-    line-height: 1;
-}
-
-#reset-date-btn {
-    background: #333;
-    border: none;
-    color: white;
-    border-radius: 50%;
-    width: 32px;
-    height: 32px;
-    display: flex;
+/* SUMMARY MODE (WEEK/MONTH) */
+.header-top.summary-mode {
     align-items: center;
-    justify-content: center;
-    cursor: pointer;
 }
 
-/* --- CALENDAR ANIMATION WRAPPER --- */
-.calendar-wrapper {
-    max-height: 0;
-    opacity: 0;
-    overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-/* Когда активен, календарь выезжает */
-.calendar-wrapper.visible {
-    max-height: 100px;
-    opacity: 1;
-    margin-bottom: 10px;
-}
-
-/* Calendar Strip */
-.calendar-strip {
-    display: flex;
-    gap: 8px;
-    padding-bottom: 10px;
-    width: 100%;
-
-    /* ВКЛЮЧАЕМ СКРОЛЛ */
-    overflow-x: auto;
-
-    /* Включаем инерцию на iOS (плавное торможение) */
-    -webkit-overflow-scrolling: touch;
-
-    /* Скрываем скроллбар для красоты */
-    scrollbar-width: none;
-}
-
-.calendar-strip::-webkit-scrollbar {
-    display: none;
-}
-
-
-.calendar-apply-btn {
-    background-color: var(--primary);
-    transition: 0.5s ease-in-out;
-}
-
-
-
-.day-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-    /* ВАЖНО: Фиксируем ширину, чтобы влезало ровно 7 дней, но можно было листать */
-    /* calc(100% / 7 - отступы) - грубая настройка, или просто min-width */
-    flex: 0 0 calc(100% / 7 - 8px);
-    min-width: 50px;
-
-    height: 68px;
-    border-radius: 18px;
-    color: var(--text-secondary);
-    transition: 0.2s;
-    background: transparent;
-
-    /* Чтобы текст не выделялся при скролле */
-    user-select: none;
-}
-
-.day-item.selected {
-    background: var(--bg-chip-active);
-    color: var(--text-main);
-}
-
-.day-item .week-day {
-    font-size: 11px;
+.header-top.summary-mode .date-display {
+    font-size: 1.1rem;
+    color: var(--primary);
+    font-weight: 500;
     margin-bottom: 4px;
 }
 
-.day-item .day-num {
-    font-size: 20px;
-    font-weight: 600;
+.header-top.summary-mode .date-week-day {
+    font-size: 2.5rem;
+    color: var(--text-main);
+    font-weight: 400;
+    line-height: 1;
+    font-family: 'Google Sans', sans-serif;
+    letter-spacing: -1px;
 }
 
-/* --- MAIN CONTENT SHEET --- */
-main {
-    flex-grow: 1;
+.header-top.summary-mode #header-total,
+.header-top.summary-mode #header-stat {
+    display: none;
+}
+
+.header-top.summary-mode #header-action-btn {
+    display: block !important;
+}
+
+.header-top.summary-mode #reset-date-btn {
+    display: none !important;
+}
+
+
+/* --- NAVIGATION --- */
+
+nav.nav-hidden {
+    transform: translateY(100%);
+}
+
+body.nav-hidden-mode .fab {
+    bottom: 20px;
+}
+
+nav button {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
     display: flex;
     flex-direction: column;
-    overflow: hidden;
-    position: relative;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    flex: 1;
+    height: 100%;
+    transition: color 0.3s ease;
 }
 
-.content-sheet {
-    background: var(--bg-sheet);
-    border-radius: 2rem 2rem 0 0;
-    flex-grow: 1;
-    padding: 0 0 100px 0;
-    overflow-y: auto;
+nav button .material-symbols-rounded {
+    font-size: var(--f-title);
+    padding: 4px 20px;
+    border-radius: 20px;
+    transition: 0.3s;
+    color: var(--text-secondary);
 }
 
-/* Filters Inside Sheet */
-.filters-row {
+nav button.active {
+    color: var(--text-main);
+}
+
+nav button.active .material-symbols-rounded {
+    background: var(--primary);
+    color: var(--text-static);
+}
+
+
+/* --- COMPONENTS: BUTTONS --- */
+
+.fab {
+    position: fixed;
+    bottom: calc(var(--nav-height) + 20px);
+    right: 1.5rem;
+    background: var(--primary);
+    color: var(--text-static);
+    height: 4rem;
+    min-width: 4rem;
+    border-radius: 1rem;
+    border: none;
+    z-index: 50;
     display: flex;
-    gap: 0.5rem;
-    /* Делаем блок липким */
-    position: sticky;
-    top: 0;
-    z-index: 20;
-    /* Поверх элементов списка */
-    background: var(--bg-sheet);
-    /* Цвет фона из ваших переменных */
-    padding: 1rem;
-    transition: all 0.4s ease;
-
-    /* Добавим небольшую тень или границу снизу при скролле (опционально) */
+    align-items: center;
+    justify-content: center;
+    padding: 0 1rem;
+    overflow: hidden;
+    transition: transform 0.2s ease, bottom 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    will-change: width, transform;
 }
 
-/* Класс, который будет добавляться при скролле */
-.filters-row.scrolled {
-    box-shadow: 0 1px 1px var(--border);
+.fab .material-symbols-rounded {
+    font-size: var(--f-title);
+    flex-shrink: 0;
 }
 
-/* Стили для табов "Сегодня/Все" */
+.fab-text {
+    font-size: 1rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 135px;
+    margin-left: 12px;
+    opacity: 1;
+    transition:
+        max-width 0.6s cubic-bezier(0.2, 0.8, 0.2, 1),
+        margin-left 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
+        opacity 2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.fab.collapsed .fab-text {
+    max-width: 0;
+    margin-left: 0;
+    opacity: 0;
+    transition:
+        opacity 0.4s ease-in-out,
+        max-width 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s,
+        margin-left 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s;
+}
+
 .pill {
     background: var(--bg-chip);
     color: var(--text-main);
@@ -351,7 +375,6 @@ main {
     padding: 1rem;
     border-radius: 50rem;
     font-size: var(--f-body);
-    /* outline: 1px solid var(--bg-chip); */
     outline-offset: -1px;
     font-weight: 500;
     cursor: pointer;
@@ -361,31 +384,177 @@ main {
 .pill.active {
     background: var(--bg-chip-active);
     color: var(--text-main);
-    /* font-weight: 400; */
 }
 
-/* Заголовок группы услуг (как в Истории) */
-
-
-.group-header .cat-label {
-    font-size: var(--f-subtitle);
-    color: var(--text-main);
+.btn-create {
+    width: 100%;
+    background: var(--primary);
+    color: var(--text-static);
+    padding: 1rem;
+    border: none;
+    border-radius: 50rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 10px;
 }
 
-.group-header .cat-count {
-    color: var(--text-muted);
-    font-size: var(--f-subtitle);
-}
-
-/* Settings Header */
-.settings-header {
+.btn-delete {
+    width: 100%;
+    background: var(--bg-chip);
+    color: var(--danger);
+    padding: 1rem;
+    border: none;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 1.5rem 1.5rem 0.5rem 1.5rem;
+    justify-content: center;
+    gap: 8px;
 }
 
-/* --- LIST ITEMS --- */
+.btn-delete .material-symbols-rounded {
+    font-size: 20px;
+}
+
+.btn-delete-active {
+    width: 100%;
+    color: var(--bg-app);
+    background-color: var(--danger);
+    padding: 1rem;
+    border: none;
+    border-radius: 50px;
+    font-size: var(--f-body);
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 10px;
+    flex: 1 1 auto;
+}
+
+.btn-delete-active:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+}
+
+.btn-cancel {
+    width: 100%;
+    background: transparent;
+    color: white;
+    border: none;
+    font-size: 1rem;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.close-modal-btn {
+    background: var(--bg-chip);
+    border: none;
+    color: var(--text-main);
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.close-modal-btn>* {
+    font-size: var(--f-body);
+}
+
+.header-action-btn {
+    background: var(--bg-chip);
+    color: var(--text-main);
+    border: none;
+    padding: 10px 16px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.2s;
+    white-space: nowrap;
+}
+
+.header-action-btn:active {
+    transform: scale(0.95);
+    background: #333;
+}
+
+
+/* --- COMPONENTS: FORMS & INPUTS --- */
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.input-dark {
+    width: 100%;
+    background: var(--bg-chip);
+    border: 1px solid transparent;
+    text-align: center;
+    color: white;
+    font-weight: 500;
+    padding: 16px;
+    border-radius: 5rem;
+    font-size: var(--f-body);
+    margin-bottom: 1rem;
+    outline: 1px solid var(--border);
+}
+
+.input-dark:focus {
+    outline: 2px solid var(--primary);
+    background-color: var(--bg-input-fill);
+}
+
+.select-wrapper {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.select-wrapper select {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.select-wrapper::after {
+    content: 'arrow_drop_down';
+    font-family: 'Material Symbols Rounded';
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: white;
+    width: 56px;
+    height: 56px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.75rem;
+    pointer-events: none;
+}
+
+.row-inputs {
+    display: flex;
+    gap: 0.5rem;
+}
+
+body.light-theme .input-dark {
+    background: var(--bg-input);
+    color: #000;
+}
+
+body.light-theme .input-dark:focus {
+    background: var(--bg-input-fill);
+    color: #000;
+}
+
+
+/* --- COMPONENTS: LISTS & CARDS --- */
+
 .list {
     list-style: none;
     padding-inline: 1rem;
@@ -402,26 +571,7 @@ main {
     letter-spacing: 0.5px;
 }
 
-/* List Item Card */
-.list-item {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: stretch;
-    padding-block: 1rem;
-    cursor: pointer;
-}
-
-
-/* --- ГРУППИРОВКА ДНЕЙ В БЛОКИ --- */
 .list-block {
-    /* outline: 0.5rem solid #ffffffc2;
-    border-radius: 1rem;
-    background-color: #ffffffc2;
-    margin-top: 1rem;
-    overflow: hidden;
-    list-style: none;
-    padding-inline: 0.5rem; */
     box-shadow:
         1rem 0px 0 0 var(--bg-card),
         -1rem 0px 0 0 var(--bg-card);
@@ -432,9 +582,15 @@ main {
     list-style: none;
 }
 
-/* Убираем стандартные отступы у вложенного списка */
+.list-item {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    padding-block: 1rem;
+    cursor: pointer;
+}
 
-/* Убираем рамку у последнего элемента в блоке, если она была */
 .list-block .list-item {
     box-shadow: 0 1px 0 var(--outline);
 }
@@ -467,9 +623,7 @@ main {
     width: 70%;
     aspect-ratio: 1 / 1;
     object-fit: contain;
-    /* Картинка заполнит круг, обрезав лишнее */
     border-radius: 50%;
-    /* Делаем саму картинку круглой */
     display: block;
 }
 
@@ -529,85 +683,9 @@ main {
     color: var(--grow);
 }
 
-.text-green {
-    color: var(--grow);
 
-}
+/* --- COMPONENTS: MODALS & POPOVERS --- */
 
-/* --- FAB --- */
-
-/* --- FAB ANIMATION (FINAL SMOOTH) --- */
-.fab {
-    position: fixed;
-    bottom: calc(var(--nav-height) + 20px);
-    right: 1.5rem;
-    /* Базовые стили */
-    background: var(--primary);
-    color: var(--text-static);
-    /* Размеры и форма */
-    height: 4rem;
-    min-width: 4rem;
-    border-radius: 1rem;
-    border: none;
-    z-index: 50;
-    /* Flexbox центрирование */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 1rem;
-    overflow: hidden;
-    /* Анимация самой кнопки (позиция и подпрыгивание) */
-    transition: transform 0.2s ease, bottom 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-    /* Оптимизация для браузера, чтобы не лагало */
-    will-change: width, transform;
-}
-
-/* Иконка */
-.fab .material-symbols-rounded {
-    font-size: var(--f-title);
-    flex-shrink: 0;
-    /* Запрещаем сплющивать иконку */
-}
-
-/* Текст */
-.fab-text {
-    font-size: 1rem;
-    font-weight: 600;
-    white-space: nowrap;
-    overflow: hidden;
-
-    /* --- НАСТРОЙКИ ОТКРЫТОГО СОСТОЯНИЯ --- */
-    /* Ставим ширину ближе к реальности (~130px), чтобы анимация начиналась сразу */
-    max-width: 135px;
-    margin-left: 12px;
-    opacity: 1;
-
-    /* Анимация РАСКРЫТИЯ (скролл вверх) */
-    /* Сначала выезжает ширина (плавно), а прозрачность появляется в конце */
-    transition:
-        max-width 0.6s cubic-bezier(0.2, 0.8, 0.2, 1),
-        margin-left 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
-        opacity 2s cubic-bezier(0.2, 0.8, 0.2, 1)
-        /* Задержка появления текста */
-}
-
-/* --- НАСТРОЙКИ СВЕРНУТОГО СОСТОЯНИЯ (скролл вниз) --- */
-.fab.collapsed .fab-text {
-    max-width: 0;
-    margin-left: 0;
-    opacity: 0;
-
-    /* Анимация ЗАКРЫТИЯ */
-    /* Сначала быстро исчезает текст (opacity), 
-       и только потом (через 0.1s) начинает ехать ширина */
-    transition:
-        opacity 0.4s ease-in-out,
-        max-width 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s,
-        /* Задержка сжатия */
-        margin-left 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s;
-}
-
-/* --- MODAL --- */
 .modal {
     display: none;
     position: fixed;
@@ -648,75 +726,139 @@ main {
     color: var(--text-main);
 }
 
-.close-modal-btn {
-    background: var(--bg-chip);
-    border: none;
-    color: var(--text-main);
-    width: 2rem;
-    height: 2rem;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-}
-
-.close-modal-btn>* {
-    font-size: var(--f-body);
-}
-
-.content-sheet::-webkit-scrollbar {
-    display: none;
-    overflow: hidden;
-}
-
-@keyframes slideUp {
-    from {
-        transform: translateY(100%);
-    }
-
-    to {
-        transform: translateY(0);
-    }
-}
-
-
-
-.input-dark {
-    width: 100%;
-    background: var(--bg-chip);
-    border: 1px solid transparent;
-    text-align: center;
-    color: white;
-    font-weight: 500;
-    padding: 16px;
-    border-radius: 5rem;
-    font-size: var(--f-body);
-    margin-bottom: 1rem;
-    outline: 1px solid var(--border);
-}
-
-.btn-cancel-ghost {
-    width: 100%;
-    background: var(--bg-chip);
-    color: var(--text-main);
-    padding: 1rem;
-    border: none;
-    border-radius: 50px;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-}
-
 .modal-actions {
     display: flex;
     flex-direction: column;
     margin-top: 1rem;
 }
 
-.input-dark:focus {
-    outline: 2px solid var(--primary);
-    background-color: var(--bg-input-fill);
+.confirmation-content {
+    text-align: center;
+    padding: 1rem;
+    padding-bottom: 2rem;
+    gap: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.confirmation-actions {
+    width: 100%;
+}
+
+.confirm-message-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.confirm-title {
+    font-size: var(--f-title);
+    color: var(--text-main);
+    font-weight: 400;
+}
+
+.confirm-text {
+    color: var(--text-secondary);
+    font-size: var(--f-body);
+    line-height: 1.4;
+}
+
+.popover-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 99;
+    background: rgba(0, 0, 0, 0.0);
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+    pointer-events: none;
+}
+
+.popover-backdrop.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.period-popover {
+    position: absolute;
+    top: 5rem;
+    left: 20px;
+    width: 200px;
+    z-index: 100;
+    background-color: transparent;
+    border-radius: 16px;
+    padding: 8px;
+    background-color: var(--primary-old);
+    outline: 0px solid transparent;
+    transform-origin: top left;
+    opacity: 0;
+    filter: blur(2px);
+    transform: translateY(20px);
+    transition:
+        all 0.4s cubic-bezier(0.54, 0.16, 0, 1.32);
+}
+
+.period-popover.visible {
+    filter: blur(0px);
+    opacity: 1;
+    transform: translateY(0);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+    outline: 1px solid var(--bg-chip);
+    outline-offset: -1px;
+}
+
+.popover-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 12px;
+    border-radius: 8px;
+    color: var(--text-main);
+    cursor: pointer;
+    font-size: 0.95rem;
+}
+
+.popover-item:active {
+    background: var(--pill-bg);
+}
+
+.popover-item span.material-symbols-rounded {
+    font-size: 20px;
+    color: var(--text-second);
+}
+
+.popover-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 4px 10px;
+}
+
+body.light-theme .period-popover {
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+
+/* --- COMPONENTS: FILTERS, TABS, CATEGORIES --- */
+
+.filters-row {
+    display: flex;
+    gap: 0.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background-color: var(--bg-sheet);
+    padding: 1rem;
+    transition:
+        box-shadow 0.5s ease,
+        background-color 0.3s ease;
+}
+
+.filters-row.scrolled {
+    box-shadow: 0 1px 1px var(--border);
 }
 
 .category-row {
@@ -740,7 +882,7 @@ main {
     gap: 8px;
     cursor: pointer;
     border: 1px solid transparent;
-    transition: all 0.2s ease-in-out;
+    transition: all 0.8s ease-in-out infinite;
     font-weight: 500;
 }
 
@@ -748,171 +890,14 @@ main {
     background: var(--bg-chip-active);
     color: var(--text-main);
     border-color: transparent;
-
-
 }
 
 .cat-pill .material-symbols-rounded {
     font-size: 18px;
 }
 
-.select-wrapper {
-    position: relative;
-    margin-bottom: 1rem;
-}
 
-.select-wrapper select {
-    -webkit-appearance: none;
-    appearance: none;
-}
-
-.select-wrapper::after {
-    content: 'arrow_drop_down';
-    font-family: 'Material Symbols Rounded';
-    position: absolute;
-    right: 0;
-    top: 0;
-    color: white;
-    width: 56px;
-    height: 56px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.75rem;
-    pointer-events: none;
-}
-
-.row-inputs {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.btn-create {
-    width: 100%;
-    background: var(--primary);
-    color: var(--text-static);
-    padding: 1rem;
-    border: none;
-    border-radius: 50rem;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    margin-bottom: 10px;
-}
-
-.btn-delete {
-    width: 100%;
-    background: var(--bg-chip);
-    color: var(--danger);
-    padding: 1rem;
-    border: none;
-    border-radius: 50px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-
-.btn-delete .material-symbols-rounded {
-    font-size: 20px;
-}
-
-.btn-cancel {
-    width: 100%;
-    background: transparent;
-    color: white;
-    border: none;
-    font-size: 1rem;
-    padding: 10px;
-    cursor: pointer;
-}
-
-.hidden {
-    display: none !important;
-}
-
-/* --- NAV --- */
-nav {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    height: var(--nav-height);
-    background: var(--bg-sheet);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    z-index: 40;
-    padding-bottom: env(safe-area-inset-bottom);
-    box-shadow: 1px 1px 1px 1px rgba(255, 255, 255, 0);
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    transform: translateY(0);
-}
-
-nav.nav-hidden {
-    transform: translateY(100%);
-}
-
-body.nav-hidden-mode .fab {
-    bottom: 20px;
-}
-
-nav button {
-    background: none;
-    border: none;
-    color: #808480;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    font-size: 12px;
-    font-weight: 500;
-    flex: 1;
-    height: 100%;
-}
-
-nav button .material-symbols-rounded {
-    font-size: var(--f-title);
-    padding: 4px 20px;
-    border-radius: 20px;
-    transition: 0.3s;
-}
-
-nav button.active {
-    color: var(--text-main);
-}
-
-nav button.active .material-symbols-rounded {
-    background: var(--primary);
-    color: var(--text-static);
-}
-
-
-/* --- HISTORY GROUP HEADER --- */
-.group-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    padding-top: 1.5rem;
-    font-size: var(--f-body);
-    font-weight: 500;
-}
-
-.group-header .date-label {
-    color: var(--text-main);
-    text-transform: capitalize;
-    /* Первая буква заглавная */
-}
-
-.group-header .day-total {
-    color: var(--text-muted);
-    /* Зеленый цвет для суммы, как в референсе */
-}
+/* --- COMPONENTS: EMPTY STATE --- */
 
 .empty-block {
     height: calc(50vh - 230px);
@@ -949,22 +934,18 @@ nav button.active .material-symbols-rounded {
 }
 
 
+/* --- VIEW: HISTORY --- */
 
-/* --- ПАНЕЛЬ ИНСТРУМЕНТОВ ИСТОРИИ --- */
 .history-toolbar {
     display: flex;
     gap: 0.5rem;
-    /* Делаем блок липким */
     position: sticky;
     top: 0;
     z-index: 20;
-    /* Поверх элементов списка */
     background: var(--bg-sheet);
-    /* Цвет фона из ваших переменных */
     padding: 1rem;
 }
 
-/* Кнопки (Воронка и Крестик) */
 .tool-btn {
     background: var(--bg-chip);
     color: var(--text-main);
@@ -984,18 +965,15 @@ nav button.active .material-symbols-rounded {
     font-size: 1.25rem;
 }
 
-
 .tool-btn.filled:active {
     background: var(--bg-chip-active);
 }
 
-/* Кнопка сброса (Крестик) */
 .tool-btn.ghost {
     color: var(--text-second);
     outline: 1px solid var(--border);
     outline-offset: -1px;
     margin-right: 0.5rem;
-
 }
 
 .tool-btn.ghost:active {
@@ -1003,7 +981,6 @@ nav button.active .material-symbols-rounded {
     color: var(--text-main);
 }
 
-/* Скролл чипсов справа */
 .history-chips-scroll {
     display: flex;
     align-items: center;
@@ -1012,160 +989,170 @@ nav button.active .material-symbols-rounded {
     height: 100%;
     scrollbar-width: none;
     padding-right: 10px;
-    /* Отступ справа */
 }
 
 .history-chips-scroll::-webkit-scrollbar {
     display: none;
 }
 
-/* --- МИНИ-МОДАЛКА (POPOVER) --- */
-/* --- BACKDROP (Фон) --- */
-.popover-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 99;
-    background: rgba(0, 0, 0, 0.0);
-    /* Цвет фона */
+.group-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-top: 1.5rem;
+    font-size: var(--f-body);
+    font-weight: 500;
+}
 
-    /* Состояние "Скрыто, но готово к анимации" */
+.group-header .date-label {
+    color: var(--text-main);
+    text-transform: capitalize;
+}
+
+.group-header .day-total {
+    color: var(--text-muted);
+}
+
+
+/* --- VIEW: SETTINGS --- */
+
+.settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 1.5rem 0.5rem 1.5rem;
+}
+
+.settings-wrapper {
+    max-height: 0;
     opacity: 0;
-    transition: opacity 0.2s ease-in-out;
-    /* Плавный переход */
-    pointer-events: none;
-    /* Чтобы нельзя было кликнуть пока он прозрачный */
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-/* Состояние "Видимо" */
-.popover-backdrop.visible {
+.settings-wrapper.visible {
+    max-height: 100px;
     opacity: 1;
-    pointer-events: auto;
+    margin-bottom: 10px;
 }
 
-/* --- POPOVER (Менюшка) --- */
-.period-popover {
-    position: absolute;
-    top: 5rem;
-    left: 20px;
-    width: 200px;
-    z-index: 100;
-    /* clip-path: inset(0 0 round 1rem); */
-
-    /* Стили внешнего вида */
-    background-color: transparent;
-    border-radius: 16px;
-    padding: 8px;
-    background-color: var(--bg-range);
-    outline: 0px solid transparent;
-    transform-origin: top left;
-
-    /* Состояние "Скрыто" (Старт анимации) */
-    opacity: 0;
-    filter: blur(2px);
-    transform: translateY(20px);
-
-    /* Плавный переход для ВСЕХ свойств */
-    transition:
-        all 0.4s cubic-bezier(0.54, 0.16, 0, 1.32);
-        /* opacity 0.2s ease; */
-}
-
-/* Состояние "Видимо" (Конец анимации) */
-.period-popover.visible {
-        filter: blur(0px);
-    opacity: 1;
-    transform: translateY(0);
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
-    outline: 1px solid var(--bg-chip);
-    outline-offset: -1px;
-}
-
-/* .period-popover>.popover-item {
-    height: 0px;
-    opacity: 0;
-    transition:
-        height 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) opacity 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
-
-}
-
-.period-popover.visible>.popover-item {
-    height: 43px;
-    opacity: 1;
-} */
-
-/* Старую анимацию @keyframes popIn и fadeIn можно удалить, они больше не нужны */
-
-
-body.light-theme .period-popover {
-    background: #fff;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.popover-item {
+.settings-panel {
     display: flex;
     align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    margin-bottom: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.color-picker {
+    display: flex;
     gap: 12px;
-    padding: 12px 12px;
-    border-radius: 8px;
-    color: var(--text-main);
+}
+
+.color-dot {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
     cursor: pointer;
-    font-size: 0.95rem;
+    border: 2px solid transparent;
+    transition: transform 0.2s, border-color 0.2s;
+    flex-shrink: 0;
 }
 
-.popover-item:active {
-    background: var(--pill-bg);
+.color-dot.active {
+    border-color: var(--text-main);
+    transform: scale(1.15);
 }
 
-.popover-item span.material-symbols-rounded {
+.theme-toggle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--bg-chip);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-main);
+    flex-shrink: 0;
+}
+
+.theme-toggle:active {
+    transform: scale(0.95);
+}
+
+
+/* --- CALENDAR: STRIP --- */
+
+.calendar-wrapper {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.calendar-wrapper.visible {
+    max-height: 100px;
+    opacity: 1;
+    margin-bottom: 10px;
+}
+
+.calendar-strip {
+    display: flex;
+    gap: 8px;
+    padding-bottom: 10px;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.calendar-strip::-webkit-scrollbar {
+    display: none;
+}
+
+.day-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 calc(100% / 7 - 8px);
+    min-width: 50px;
+    padding-block: 0.5rem;
+    border-radius: 1rem;
+    color: var(--text-secondary);
+    background-color: transparent;
+    user-select: none;
+}
+
+.day-item.selected {
+    background-color: var(--bg-chip-active);
+    color: var(--text-main);
+}
+
+.day-item .week-day {
+    font-size: 11px;
+    margin-bottom: 4px;
+}
+
+.day-item .day-num {
     font-size: 20px;
-    color: var(--text-second);
-}
-
-.popover-divider {
-    height: 1px;
-    background: var(--border);
-    margin: 4px 10px;
-}
-
-@keyframes popIn {
-    from {
-        opacity: 0;
-        transform: scale(0.8) translateY(-10px);
-
-    }
-
-    to {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-    }
-}
-
-@keyframes fadeIn {
-    to {
-        opacity: 1;
-    }
+    font-weight: 600;
 }
 
 
+/* --- CALENDAR: FULL MODAL --- */
 
-
-
-
-/* --- КОРРЕКТНАЯ СЕТКА КАЛЕНДАРЯ --- */
-
-/* Контейнер модального окна */
 .calendar-modal-content {
     background-color: #1a1a1a;
-    /* Темный фон как на референсе */
     padding: 24px 20px 40px 20px;
     border-radius: 24px 24px 0 0;
     color: #fff;
 }
 
-/* Заголовок месяца */
 .calendar-full-header {
     display: flex;
     justify-content: space-between;
@@ -1186,7 +1173,13 @@ body.light-theme .period-popover {
     font-size: var(--f-title);
 }
 
-/* Дни недели (Пн, Вт...) */
+.calendar-wrapper,
+.calendar-scroll-area {
+    /* Используйте свой класс */
+    overflow-anchor: auto;
+    /* Браузер попытается удержать скролл на месте */
+}
+
 .weekdays-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -1196,64 +1189,32 @@ body.light-theme .period-popover {
 
 .weekdays-grid div {
     color: rgba(255, 255, 255, 0.4);
-    /* Тусклый серый */
     font-size: 14px;
     text-align: center;
     font-weight: 400;
 }
 
-/* Viewport - рамка, через которую смотрим на календарь */
-/* --- НОВЫЙ СПЛОШНОЙ КАЛЕНДАРЬ --- */
-
-/* Контейнер скролла */
 .calendar-scroll-container {
     height: calc(52px * 6 + 24px);
-    /* height: 400px; */
     overflow-y: auto;
     margin-top: 1rem;
     padding-bottom: 50px;
     overflow-anchor: none;
-    /* Критично для плавной подгрузки вверх */
     scroll-snap-type: y proximity;
     scrollbar-width: none;
 }
 
-/* Единая сетка для всех дней без разрывов */
+.calendar-scroll-container::-webkit-scrollbar {
+    display: none;
+}
+
 .continuous-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 4px 0;
-    /* 4px между неделями, 0px между днями для смыкания теней */
     padding: 0 10px;
 }
 
-/* Приглушенные дни (другие месяцы) */
-.cal-day.muted {
-    color: var(--text-muted) !important;
-}
-
-/* Магнит для скролла на начало каждой недели (для плавности) */
-.cal-day.snap-point {
-    scroll-snap-align: start;
-}
-
-lendar-scroll-container::-webkit-scrollbar {
-    display: none;
-}
-
-.cal-day.snap-point {
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
-}
-
-/* Пустые ячейки (для сдвига первого дня месяца) */
-/* .cal-day.empty {
-    pointer-events: none;
-    background: transparent;
-    height: 3.25rem;
-} */
-
-/* Обновленный стиль дня для сетки */
 .cal-day {
     width: 100%;
     max-width: 3.25rem;
@@ -1268,50 +1229,102 @@ lendar-scroll-container::-webkit-scrollbar {
     color: #fff;
     position: relative;
     z-index: 1;
-    transition: background-color 0.1s, color 0.1s, border-radius 0.1s;
+    transition:
+        background-color 0.1s,
+        color 0.1s,
+        box-shadow 0.1s,
+        border-radius 0.1s;
 }
 
-/* --- СТИЛИ ВЫДЕЛЕНИЯ (АДАПТИРОВАННЫЕ) --- */
+.cal-day.snap-point {
+    scroll-snap-align: start;
 
+}
+
+/* DAY STATES & RANGES */
 .cal-day.range-single {
     border-radius: 50%;
+    border-radius: 50% !important;
     background-color: var(--primary);
-    color: var(--bg-app);
-    box-shadow: none;
+    color: var(--text-static) !important;
+    box-shadow: none !important;
     z-index: 3;
 }
 
 .cal-day.range-start {
-    background-color: var(--bg-range);
-    color: #fff;
+    background-color: var(--primary);
+    color: var(--text-static) !important;
     border-radius: 50% 0 0 50%;
-    /* Тень закрывает щель справа */
-    box-shadow: 22px 0 0 var(--bg-range);
+    box-shadow: 27px 0 0 var(--primary);
     z-index: 2;
 }
 
-/* 3. Конец диапазона (Закруглен справа, тянется влево) */
 .cal-day.range-end {
-    background-color: var(--bg-range);
-    color: #fff;
+    background-color: var(--primary);
+    color: var(--text-static) !important;
     border-radius: 0 50% 50% 0;
-    box-shadow: -22px 0 0 var(--bg-range);
+    box-shadow: -27px 0 0 var(--primary);
     z-index: 2;
 }
 
-/* 4. Середина диапазона (Квадрат) */
+.cal-day.range-start.is-visual-end {
+    border-radius: 50% !important;
+    box-shadow: none !important;
+}
+
+.cal-day.range-end.is-visual-start {
+    border-radius: 50% !important;
+    box-shadow: none !important;
+}
+
+
+.cal-day.in-range.is-visual-start {
+    background-color: var(--primary);
+    color: var(--text-static);
+    border-radius: 50% 0 0 50%;
+    box-shadow:
+        0px 0 0 var(--primary),
+        22px 0 0 var(--primary);
+
+}
+
+/* Если день одновременно "Внутри" и "Визуальный конец" (Воскресенье) -> Убираем квадратность */
+.cal-day.in-range.is-visual-end {
+    border-radius: 0 50% 50% 0;
+    box-shadow:
+        0px 0 0 var(--primary),
+        -22px 0 0 var(--primary);
+}
+
+
 .cal-day.in-range {
-    background-color: var(--bg-range);
-    color: #fff;
+    background-color: var(--primary);
+    color: var(--text-static) !important;
     border-radius: 0;
     width: 100%;
-    box-shadow: -22px 0 0 var(--bg-range), 22px 0 0 var(--bg-range);
+    box-shadow: -22px 0 0 var(--primary), 22px 0 0 var(--primary);
     z-index: 1;
 }
 
-/* --- ТОЧКИ --- */
+/* FOCUS LOGIC */
+.continuous-grid .cal-day {
+    font-weight: 400;
+}
 
-/* Обычная зеленая точка (если день не выбран) */
+.cal-day.muted {
+    color: var(--text-muted);
+}
+
+.cal-day.range-start,
+.cal-day.range-end,
+.cal-day.in-range,
+.cal-day.is-today {
+    opacity: 1;
+    font-weight: 500;
+}
+
+
+/* TODAY INDICATOR DOT */
 .cal-day.is-today:not(.range-start):not(.range-end):not(.in-range):not(.range-single)::after {
     content: '';
     position: absolute;
@@ -1324,10 +1337,8 @@ lendar-scroll-container::-webkit-scrollbar {
     border-radius: 50%;
 }
 
-/* Черная точка (если день активен/выбран) - для контраста на зеленом фоне */
-.cal-day.is-today.range-single::after,
-.cal-day.is-today.range-start::after,
-.cal-day.is-today.range-end::after {
+
+.cal-day.is-today.range-single::after {
     content: '';
     position: absolute;
     bottom: 0.35rem;
@@ -1336,72 +1347,12 @@ lendar-scroll-container::-webkit-scrollbar {
     width: 0.3rem;
     height: 0.3rem;
     background-color: #141414;
-    /* Черный цвет */
     border-radius: 50%;
     display: block;
     z-index: 4;
 }
 
-/* Скрываем точку внутри диапазона (не по краям) */
-/* .cal-day.is-today.in-range::after {
-    display: none;
-} */
-
-
-
-
-
-/* --- ЛОГИКА ФОКУСИРОВКИ (DIMMING) --- */
-
-/* .continuous-grid .cal-day {
-    color: var(--text-main);
-    font-weight: 400;
-}
-
-.cal-day.muted {
-    color: var(--text-muted);
-}
-
-.cal-day.range-single,
-.cal-day.is-today {
-    color: var(--text-main) !important;
-    font-weight: 500;
-    opacity: 1;
-}
-
-.cal-day.in-range {
-    color: #fff !important;
-}
- */
-
-
-
-
-
-
-
-
-/* Если сегодня - это выбранный день (зеленый фон), делаем точку черной */
-/* .cal-day.selected.is-today::after {
-    background-color: transparent;
-    opacity: 0.8;
-} */
-
-/* Выбранный день (Зеленый круг) */
-/* .cal-day.selected {
-    background-color: var(--primary);
-    color: #000;
-    box-shadow: 0 0 10px rgba(157, 255, 117, 0.2);
-} */
-
-/* Соседние месяцы (тусклые) */
-/* .cal-day.prev-month,
-.cal-day.next-month {
-    color: rgba(255, 255, 255, 0.2);
-    pointer-events: none;
-} */
-
-/* Кнопки внизу */
+/* ACTIONS */
 .calendar-modal-actions {
     display: flex;
     flex-direction: column;
@@ -1409,10 +1360,9 @@ lendar-scroll-container::-webkit-scrollbar {
     margin-top: 40px;
 }
 
-.btn-primary-green {
+.btn-primary {
     width: 100%;
     background-color: var(--primary);
-    /* Lime Green */
     color: #0e110f;
     padding: 18px;
     border: none;
@@ -1422,189 +1372,26 @@ lendar-scroll-container::-webkit-scrollbar {
     cursor: pointer;
 }
 
-.btn-cancel-dark {
+.btn-primary.disabled {
+    background-color: var(--text-secondary);
+    transition: 0.5s ease;
+}
+
+.btn-ghost {
     width: 100%;
-    background: rgba(255, 255, 255, 0.08);
-    color: #fff;
-    padding: 18px;
-    border: none;
-    border-radius: 50px;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-}
-
-
-
-/* --- HEADER ACTION BUTTON (Сбросить неделю/месяц) --- */
-.header-action-btn {
     background: var(--bg-chip);
-    /* Темный фон кнопки */
     color: var(--text-main);
-    border: none;
-    padding: 10px 16px;
-    border-radius: 50px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: 0.2s;
-    white-space: nowrap;
-}
-
-.header-action-btn:active {
-    transform: scale(0.95);
-    background: #333;
-}
-
-/* --- SUMMARY MODE (Режим Неделя/Месяц) --- */
-/* Этот класс добавляется JS-ом на .header-top */
-
-.header-top.summary-mode {
-    align-items: center;
-    /* Выравнивание по центру */
-}
-
-/* 1. Меняем вид верхней строки слева (Дата/Название) */
-.header-top.summary-mode .date-display {
-    font-size: 1.1rem;
-    /* Уменьшаем шрифт */
-    color: var(--primary);
-    /* Фиолетовый цвет как на макете */
-    font-weight: 500;
-    margin-bottom: 4px;
-}
-
-/* 2. Меняем вид нижней строки слева (День недели -> СУММА) */
-.header-top.summary-mode .date-week-day {
-    font-size: 2.5rem;
-    /* Делаем огромным (это будет цена) */
-    color: var(--text-main);
-    font-weight: 400;
-    line-height: 1;
-    font-family: 'Google Sans', sans-serif;
-    letter-spacing: -1px;
-}
-
-/* 3. Скрываем стандартные элементы правой части */
-.header-top.summary-mode #header-total,
-.header-top.summary-mode #header-stat {
-    display: none;
-}
-
-/* 4. Показываем кнопку сброса */
-.header-top.summary-mode #header-action-btn {
-    display: block !important;
-}
-
-/* Скрываем крестик сброса даты в этом режиме, если он вдруг активен */
-.header-top.summary-mode #reset-date-btn {
-    display: none !important;
-}
-
-
-
-
-/* --- ПАНЕЛЬ НАСТРОЕК --- */
-.settings-wrapper {
-    max-height: 0;
-    opacity: 0;
-    overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-/* Когда активен, панель выезжает */
-.settings-wrapper.visible {
-    max-height: 100px;
-    /* Высота достаточная для панели */
-    opacity: 1;
-    margin-bottom: 10px;
-}
-
-
-.settings-panel {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    /* Расстояние между кружками */
     padding: 1rem;
-    /* Отступы */
-    margin-bottom: 0;
-
-    /* Включаем горизонтальный скролл, если кружков много */
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-
-    /* Скрываем скроллбар */
-    scrollbar-width: none;
-}
-
-/* Увеличиваем кружки цветов, чтобы было удобно нажимать (как на скрине) */
-.color-dot {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
+    border: none;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 500;
     cursor: pointer;
-    border: 2px solid transparent;
-    transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
-    flex-shrink: 0;
-    /* Чтобы кружки не сплющивались */
-}
-
-.color-dot.active {
-    border-color: var(--text-main);
-}
-
-/* Переключатель темы */
-.theme-toggle {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background: var(--bg-chip);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: var(--text-main);
-    flex-shrink: 0;
-}
-
-.theme-toggle:active {
-    transform: scale(0.95);
-}
-
-.color-picker {
-    display: flex;
-    gap: 12px;
-}
-
-.color-dot {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    cursor: pointer;
-    border: 2px solid transparent;
-    transition: transform 0.2s, border-color 0.2s;
-}
-
-.color-dot.active {
-    border-color: var(--text-main);
-    transform: scale(1.15);
 }
 
 
 
-/* Исправления для светлой темы */
-body.light-theme .input-dark {
-    background: var(--bg-input);
-    color: #000;
-}
-
-body.light-theme .input-dark:focus {
-    background: var(--bg-input-fill);
-    color: #000;
-}
-
-
+/* LIGHT THEME OVERRIDES FOR CALENDAR */
 body.light-theme .calendar-modal-content {
     background: #fff;
     color: #000;
@@ -1627,14 +1414,6 @@ body.light-theme .calendar-current-year {
     color: rgba(0, 0, 0, 0.4);
 }
 
-body.light-theme #cal-year {
-    color: rgba(0, 0, 0, 0.4);
-}
-
-body.light-theme #cal-month {
-    color: #000;
-}
-
 body.light-theme .weekdays-grid div {
     color: rgba(0, 0, 0, 0.5);
 }
@@ -1645,98 +1424,90 @@ body.light-theme .btn-cancel-dark {
 }
 
 
+/* --- HELPERS & UTILITIES --- */
 
-
-
-
-/* --- МОДАЛЬНОЕ ОКНО ПОДТВЕРЖДЕНИЯ --- */
-.confirmation-content {
-    text-align: center;
-    padding: 1rem;
-    padding-bottom: 2rem;
-    gap: 1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    /* Чуть больше отступы */
+.small {
+    font-size: var(--f-nav);
 }
 
-.confirmation-actions {
-    width: 100%;
+.stat-up {
+    color: var(--grow) !important;
 }
 
-.confirm-message-block {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+.stat-down {
+    color: var(--drop) !important;
 }
 
-.confirm-title {
-    font-size: var(--f-title);
-    color: var(--text-main);
-    font-weight: 400;
+.text-green {
+    color: var(--grow);
 }
 
-.confirm-text {
-    color: var(--text-secondary);
-    font-size: var(--f-body);
-    line-height: 1.4;
+.hidden {
+    display: none !important;
 }
 
 
-.btn-delete-active {
-    width: 100%;
-    color: var(--bg-app);
-    background-color: var(--danger);
-    padding: 1rem;
+/* --- ANIMATIONS --- */
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}
+
+
+/* --- POTENTIALLY UNUSED OR OBSOLETE STYLES --- */
+/* These styles were identified during refactoring and might be unused. */
+/* Please verify before deleting them permanently. */
+
+/*
+#reset-date-btn {
+    background: #333;
     border: none;
-    border-radius: 50px;
-    font-size: var(--f-body);
-    font-weight: 600;
+    color: white;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    margin-bottom: 10px;
-    flex: 1 1 auto;
-
 }
 
-.btn-delete-large:active {
-    transform: scale(0.98);
-    opacity: 0.9;
+.calendar-apply-btn {
+    background-color: var(--primary);
+    transition: 0.5s ease-in-out;
 }
 
-
-
-
-
-
-/* --- ЛОГИКА ФОКУСИРОВКИ --- */
-
-/* 1. По умолчанию (если нет класса muted) цвет обычный */
-.continuous-grid .cal-day {
+.group-header .cat-label {
+    font-size: var(--f-subtitle);
     color: var(--text-main);
-    font-weight: 400;
 }
 
-/* 2. Приглушенный день (другой месяц) */
-.cal-day.muted {
+.group-header .cat-count {
     color: var(--text-muted);
+    font-size: var(--f-subtitle);
 }
 
-/* 3. ИСКЛЮЧЕНИЯ: Дни внутри диапазона, старт, конец и сегодня ВСЕГДА белые */
-.cal-day.range-start,
-.cal-day.range-end,
-.cal-day.range-single,
-.cal-day.in-range,
-.cal-day.is-today {
-    color: #fff;
-    /* Перекрывает .muted */
-    opacity: 1;
+
+@keyframes popIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8) translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
 }
 
-/* Дополнительно: чуть жирнее для акцента */
-.cal-day.range-start,
-.cal-day.range-end,
-.cal-day.range-single,
-.cal-day.is-today {
-    font-weight: 500;
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
 }
+*/

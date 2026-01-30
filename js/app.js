@@ -20,15 +20,30 @@ export const app = {
     tempStart: null, tempEnd: null,
     selectingState: 'start',
     pendingDeleteAction: null,
-    // Поиск
+    isCalendarLoading: false,
     searchQuery: '',
 
-    toggleTheme: () => {
+toggleTheme: () => {
+        // 1. Просто переключаем класс (CSS сделает остальное)
         document.body.classList.toggle('light-theme');
+        
+        // 2. Проверяем, включился ли он
         const isLight = document.body.classList.contains('light-theme');
-        const icon = document.getElementById('theme-icon');
-        if (icon) icon.innerText = isLight ? 'light_mode' : 'dark_mode';
+        
+        // 3. Сохраняем выбор пользователя
         localStorage.setItem('theme', isLight ? 'light' : 'dark');
+        
+        // 4. Меняем иконку кнопки (если нужно)
+        const icon = document.getElementById('theme-icon');
+        if (icon) {
+            // Если светлая - показываем луну (чтобы переключить на темную)
+            // Если темная - показываем солнце
+            icon.innerText = isLight ? 'dark_mode' : 'light_mode';
+        }
+        
+        // 5. (Опционально) Красим "шапку" браузера в мобилках
+        document.querySelector('meta[name="theme-color"]')
+            .setAttribute('content', isLight ? '#f2f2f7' : '#141414');
     },
 
     setAccent: (colorVar, el) => {
@@ -94,6 +109,10 @@ export const app = {
         const capitalizedMonth = monthName.charAt(0).toUpperCase() + monthName.slice(1);
         const prevMonthBtn = document.getElementById('prev-month-btn-text');
         if (prevMonthBtn) prevMonthBtn.innerText = capitalizedMonth;
+
+        const isLight = document.body.classList.contains('light-theme');
+        const icon = document.getElementById('theme-icon');
+        if (icon) icon.innerText = isLight ? 'dark_mode' : 'light_mode';
 
         ui.initScrollHandler();
         ui.updateHeader();

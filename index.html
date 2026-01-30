@@ -19,6 +19,17 @@
 </head>
 
 <body>
+    <script>
+        // Читаем настройку из памяти
+        const saved = localStorage.getItem('theme');
+        // Проверяем систему (если в памяти пусто)
+        const sysLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+
+        // Если сохранено 'light' ИЛИ (ничего не сохранено, но система светлая)
+        if (saved === 'light' || (!saved && sysLight)) {
+            document.body.classList.add('light-theme');
+        }
+    </script>
     <header>
 
 
@@ -107,10 +118,10 @@
         <div class="period-popover hidden" id="period-popover">
 
             <div class="popover-item" onclick="ui.setHistoryFilter('week')">
-                <span>Неделя</span>
+                <span>Последняя неделя</span>
             </div>
             <div class="popover-item" onclick="ui.setHistoryFilter('month')">
-                <span>Месяц</span>
+                <span>Текущий месяц</span>
             </div>
             <div class="popover-item" onclick="ui.setHistoryFilter('month-prev')">
                 <span id="prev-month-btn-text">Прошлый месяц</span>
@@ -179,7 +190,7 @@
                 <button class="btn-create" id="modal-save-btn" onclick="app.saveRecord()">Создать</button>
                 <button class="btn-delete hidden" id="modal-delete-btn" onclick="app.deleteCurrentRecord()">Удалить
                     запись</button>
-                <button class="btn-cancel-ghost" id="modal-cancel-btn" onclick="ui.toggleModal(false)">Отменить</button>
+                <button class="btn-ghost" id="modal-cancel-btn" onclick="ui.toggleModal(false)">Отменить</button>
             </div>
         </div>
     </div>
@@ -207,11 +218,11 @@
             </div>
 
             <div class="calendar-modal-actions">
-                <button id="calendar-apply-btn" class="btn-primary-green" onclick="ui.applyCalendarDate()">
+                <button id="calendar-apply-btn" class="btn-primary" onclick="ui.applyCalendarDate()">
                     Выбрать дату
                 </button>
 
-                <button class="btn-cancel-dark" id="calendar-cancel-btn" onclick="app.handleCalendarCancel()">
+                <button class="btn-ghost" id="calendar-cancel-btn" onclick="app.handleCalendarCancel()">
                     Отменить
                 </button>
             </div>
@@ -244,7 +255,7 @@
                 <button class="btn-create" id="service-save-btn" onclick="app.saveService()">Создать</button>
                 <button class="btn-delete hidden" id="service-delete-btn" onclick="app.deleteCurrentService()">Удалить
                     услугу</button>
-                <button class="btn-cancel-ghost" id="service-cancel-btn"
+                <button class="btn-ghost" id="service-cancel-btn"
                     onclick="ui.toggleServiceModal(false)">Отменить</button>
             </div>
         </div>
@@ -258,7 +269,7 @@
             </div>
             <div class="modal-actions confirmation-actions">
                 <button class="btn-delete-active" id="confirm-proceed-btn">Удалить</button>
-                <button class="btn-cancel-ghost" onclick="ui.closeConfirmModal()">Отменить</button>
+                <button class="btn-ghost" onclick="ui.closeConfirmModal()">Отменить</button>
             </div>
         </div>
     </div>

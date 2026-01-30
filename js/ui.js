@@ -52,8 +52,28 @@ const baseUi = {
         hStat.classList.remove('hidden');
         statIcon.classList.remove('hidden');
 
+        // ЛОГИКА "УСЛУГИ / НАСТРОЙКИ"
         if (app.currentTab === 'settings') {
-            statText.innerText = "База активна"; statIcon.innerText = "database";
+            // 1. Считаем реальный вес всех данных в localStorage
+            let totalBytes = 0;
+            for (let key in localStorage) {
+                if (localStorage.hasOwnProperty(key)) {
+                    // (Длина ключа + длина значения) * 2 байта (так как JS использует UTF-16)
+                    totalBytes += (localStorage[key].length + key.length) * 2;
+                }
+            }
+
+            // 2. Конвертируем в Кб
+            const usedKB = (totalBytes / 1024).toFixed(2);
+            const limitMB = 5; // Стандартный лимит для PWA
+
+            // 3. Выводим текст
+            statText.innerText = `${usedKB} Кб из ${limitMB} Мб`;
+            statIcon.innerText = "database"; // Или "sd_card", "database"
+
+            // Делаем текст ярким
+            hStat.className = "short-statistic";
+
             hDate.innerText = `${now.getDate()} ${monthsGen[now.getMonth()]}`;
             hWeek.innerText = days[now.getDay()];
             return;
@@ -65,17 +85,17 @@ const baseUi = {
 
         const contextData = { selectedDate: app.selectedDate, rangeStart: app.rangeStart, rangeEnd: app.rangeEnd, now: now };
         const stats = statistics.calculateHeaderStats(displaySum, statsMode, records, contextData);
-        
+
         statText.innerText = stats.text;
         statIcon.innerText = stats.icon;
         hStat.className = stats.className;
         if (stats.icon === 'remove') statIcon.classList.add('hidden');
-        
+
         // 3. Обновляем заголовки дат
         if (app.currentTab === 'home' || statsMode === 'today') {
             hDate.innerText = `${now.getDate()} ${monthsGen[now.getMonth()]}`;
             hWeek.innerText = days[now.getDay()];
-            
+
             const hour = now.getHours();
             const todayCount = records.filter(r => timeManager.isToday(r.date)).length;
             if (hour >= 8 && hour < 10 && todayCount === 0) {
@@ -88,15 +108,23 @@ const baseUi = {
                 const selDate = app.selectedDate;
                 hDate.innerText = `${selDate.getDate()} ${monthsGen[selDate.getMonth()]}`;
                 hWeek.innerText = days[selDate.getDay()];
-            } else if (statsMode === 'week') {
+            }
+            else if (statsMode === 'week') {
                 const start = new Date(); start.setDate(now.getDate() - 7);
                 const dateOpt = { day: '2-digit', month: '2-digit' };
                 hDate.innerText = `${start.toLocaleDateString('ru-RU', dateOpt)} - ${now.toLocaleDateString('ru-RU', dateOpt)}`;
                 hWeek.innerText = "За неделю";
-            } else if (statsMode === 'month') {
+            }
+            else if (statsMode === 'month') {
                 hDate.innerText = months[now.getMonth()];
                 hWeek.innerText = now.getFullYear();
-            } else if (statsMode === 'period') {
+            }
+            else if (statsMode === 'month-prev') {
+                const prevDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+                hDate.innerText = months[prevDate.getMonth()];
+                hWeek.innerText = prevDate.getFullYear();
+            }
+            else if (statsMode === 'period') {
                 const s = new Date(app.rangeStart); const e = new Date(app.rangeEnd);
                 const opts = { day: 'numeric', month: 'numeric' };
                 hDate.innerText = `${s.toLocaleDateString('ru-RU', opts)} - ${e.toLocaleDateString('ru-RU', opts)}`;
@@ -182,7 +210,7 @@ const baseUi = {
 
         let showH = true;
         if (['today', 'date'].includes(app.historyMode)) showH = false;
-        if (app.historyMode === 'period' && new Date(app.rangeStart).setHours(0,0,0,0) === new Date(app.rangeEnd).setHours(0,0,0,0)) showH = false;
+        if (app.historyMode === 'period' && new Date(app.rangeStart).setHours(0, 0, 0, 0) === new Date(app.rangeEnd).setHours(0, 0, 0, 0)) showH = false;
 
         Object.keys(groups).sort((a, b) => new Date(b) - new Date(a)).forEach(k => {
             if (showH) {
