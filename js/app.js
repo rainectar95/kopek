@@ -25,6 +25,7 @@ export const app = {
 
 toggleTheme: () => {
         // 1. Просто переключаем класс (CSS сделает остальное)
+        haptics.impactMedium();
         document.body.classList.toggle('light-theme');
         
         // 2. Проверяем, включился ли он
@@ -113,10 +114,23 @@ toggleTheme: () => {
         const isLight = document.body.classList.contains('light-theme');
         const icon = document.getElementById('theme-icon');
         if (icon) icon.innerText = isLight ? 'dark_mode' : 'light_mode';
+        const savedHaptics = localStorage.getItem('hapticsEnabled');
+        // Если null (первый запуск) -> true. Если 'true' -> true. Если 'false' -> false.
+        haptics.enabled = savedHaptics !== 'false';
+        
+        // Обновляем вид переключателя (если он есть в HTML)
+        const hapticSwitch = document.getElementById('haptics-switch');
+        if (hapticSwitch) hapticSwitch.checked = haptics.enabled;
 
         ui.initScrollHandler();
         ui.updateHeader();
         ui.renderToday();
+    },
+    toggleHaptics: (el) => {
+        haptics.enabled = el.checked;
+        localStorage.setItem('hapticsEnabled', el.checked);
+        // Даем пользователю почувствовать результат сразу
+        if (el.checked) haptics.impactMedium();
     },
 
     saveService: () => {
@@ -170,6 +184,7 @@ toggleTheme: () => {
     },
 
     saveRecord: () => {
+        
         let client = document.getElementById('client-name').value.trim();
         const s = document.getElementById('service-select');
         const price = document.getElementById('final-price').value;
@@ -189,6 +204,7 @@ toggleTheme: () => {
         if (app.editingRecordId) records[records.findIndex(r => r.id === app.editingRecordId)] = rData;
         else records.push(rData);
         storage.saveRecords(records);
+        haptics.success();
         ui.toggleModal(false);
         app.currentTab === 'home' ? ui.renderToday() : ui.renderHistory();
     },
@@ -213,6 +229,7 @@ toggleTheme: () => {
     deleteCurrentRecord: () => {
         if (!app.editingRecordId) return;
         ui.showConfirmDialog('Удалить запись?', 'Запись будет удалена безвозвратно.', () => {
+            haptics.error();
             storage.saveRecords(storage.getRecords().filter(r => r.id !== app.editingRecordId));
             ui.toggleModal(false);
             app.currentTab === 'home' ? ui.renderToday() : ui.renderHistory();

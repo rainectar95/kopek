@@ -4,6 +4,7 @@ import { timeManager } from './utils.js';
 export const calendarMixin = {
     toggleCalendarModal(show) {
         if (show) {
+            haptics.openModal();
             // Сброс выбора
             app.tempStart = null; app.tempEnd = null; app.selectingState = 'start';
             app.calendarViewDate = app.rangeStart ? new Date(app.rangeStart) : new Date();
@@ -201,6 +202,7 @@ loadDateRange(start, end, direction) {
         }
 
         x.onclick = (ev) => {
+            haptics.tap();
             ev.stopPropagation();
             const d = new Date(x.dataset.fullDate);
             if (!app.tempStart || app.selectingState === 'start' || (app.tempStart && app.tempEnd)) {

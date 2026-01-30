@@ -242,6 +242,7 @@ const baseUi = {
     toggleModal: (show) => {
         const m = document.getElementById('add-modal');
         if (show) {
+            haptics.openModal();
             m.classList.add('open');
             if (!app.editingRecordId) {
                 document.getElementById('modal-title').innerText = 'Новая запись'; document.getElementById('modal-save-btn').innerText = 'Создать';
@@ -254,6 +255,7 @@ const baseUi = {
     toggleServiceModal: (show) => {
         const m = document.getElementById('service-modal');
         if (show) {
+            haptics.openModal();
             m.classList.add('open');
             if (!app.editingServiceId) {
                 document.getElementById('service-modal-title').innerText = 'Новая услуга'; document.getElementById('service-save-btn').innerText = 'Создать';
@@ -360,6 +362,7 @@ const baseUi = {
     setServiceFilter: (c) => { app.serviceFilter = c; document.querySelectorAll('.filter-service').forEach(b => b.classList.toggle('active', b.innerText === c || (c === 'all' && b.innerText === 'Все'))); ui.renderServices(); },
     resetDateFilter: () => ui.setHistoryFilter('today'),
     switchTab: (t) => {
+        haptics.impactLight();
         app.currentTab = t;
         ['view-home', 'view-history', 'view-settings'].forEach(id => document.getElementById(id).classList.add('hidden'));
         document.querySelectorAll('nav button').forEach(b => b.classList.toggle('active', b.id === 'nav-' + t));
