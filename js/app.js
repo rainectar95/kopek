@@ -25,7 +25,6 @@ export const app = {
 
 toggleTheme: () => {
         // 1. Просто переключаем класс (CSS сделает остальное)
-        haptics.impactMedium();
         document.body.classList.toggle('light-theme');
         
         // 2. Проверяем, включился ли он
@@ -129,8 +128,9 @@ toggleTheme: () => {
     toggleHaptics: (el) => {
         haptics.enabled = el.checked;
         localStorage.setItem('hapticsEnabled', el.checked);
-        // Даем пользователю почувствовать результат сразу
-        if (el.checked) haptics.impactMedium();
+        
+        if (el.checked);
+            
     },
 
     saveService: () => {
@@ -204,7 +204,6 @@ toggleTheme: () => {
         if (app.editingRecordId) records[records.findIndex(r => r.id === app.editingRecordId)] = rData;
         else records.push(rData);
         storage.saveRecords(records);
-        haptics.success();
         ui.toggleModal(false);
         app.currentTab === 'home' ? ui.renderToday() : ui.renderHistory();
     },
@@ -229,7 +228,6 @@ toggleTheme: () => {
     deleteCurrentRecord: () => {
         if (!app.editingRecordId) return;
         ui.showConfirmDialog('Удалить запись?', 'Запись будет удалена безвозвратно.', () => {
-            haptics.error();
             storage.saveRecords(storage.getRecords().filter(r => r.id !== app.editingRecordId));
             ui.toggleModal(false);
             app.currentTab === 'home' ? ui.renderToday() : ui.renderHistory();

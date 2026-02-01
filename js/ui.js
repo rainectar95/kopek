@@ -362,7 +362,6 @@ const baseUi = {
     setServiceFilter: (c) => { app.serviceFilter = c; document.querySelectorAll('.filter-service').forEach(b => b.classList.toggle('active', b.innerText === c || (c === 'all' && b.innerText === 'Все'))); ui.renderServices(); },
     resetDateFilter: () => ui.setHistoryFilter('today'),
     switchTab: (t) => {
-        haptics.impactLight();
         app.currentTab = t;
         ['view-home', 'view-history', 'view-settings'].forEach(id => document.getElementById(id).classList.add('hidden'));
         document.querySelectorAll('nav button').forEach(b => b.classList.toggle('active', b.id === 'nav-' + t));
